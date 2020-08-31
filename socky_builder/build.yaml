@@ -1,0 +1,22 @@
+builders:
+  socky_builder:
+    import: "package:socky_builder/builder.dart"
+    builder_factories: ["sockyBuilder"]
+    build_extensions: { "$lib$": ["socky.g.dart"] }
+    auto_apply: dependents
+    build_to: source
+    runs_before: ["|socky_client_builder"]
+
+  socky_client_builder:
+    import: "package:socky_builder/builder.dart"
+    builder_factories: ["clientBuilder"]
+    build_extensions: { ".dart": [".client.dart"] }
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: [":socky_client_copy_builder"]
+
+post_process_builders:
+  socky_client_copy_builder:
+    import: "package:socky_builder/builder.dart"
+    builder_factory: "clientCopy"
+    input_extensions: [".client.dart"]
